@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="images">
+    <file>images/addLayer.png</file>
+    <file>images/addRaster.png</file>
+    <file>images/zomOut.png</file>
+    <file>images/zoomIn.png</file>
+  </qresource>
+</RCC>
