@@ -4,6 +4,7 @@ from qgis.core import *
 from qgis.gui import *
 import shapely
 from shapely.wkt import dumps,loads
+from SelectTool import SelectMapTool
 import sys
 import os
 # Import our GUI
@@ -27,7 +28,7 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
     QObject.connect(self.mBtnZoomOut,  SIGNAL("clicked()"),  self.zoomOut)
     QObject.connect(self.mBtnAddVector,  SIGNAL("clicked()"),  self.loadVectorLayer)
     QObject.connect(self.mBtnAddRaster,  SIGNAL("clicked()"),  self.loadRasterLayer)
-    QObject.connect(self.mBtnElevation,  SIGNAL("clicked()"),  self.getElevationTest)
+    QObject.connect(self.mBtnElevation,  SIGNAL("clicked()"),  self.setSelectionTool)
 
     # Set the title for the app
     self.setWindowTitle("ShapeViewer")
@@ -38,6 +39,9 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
     self.canvas.setCanvasColor(Qt.white)
     self.canvas.enableAntiAliasing(True)
     self.canvas.show()
+    
+    # Add map tools
+    self.selectTool = SelectMapTool(self.canvas)
     
     self.demLayer = QgsRasterLayer()
 
@@ -156,9 +160,8 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
 	file = QFileDialog.getOpenFileName(self, "Open Raster", ".", "Rasters (*.*)")
 	fileInfo = QFileInfo(file)
 
-
-
-	
+  def setSelectionTool(self):
+	  self.canvas.setMapTool(self.selectTool)	
 
 def main(argv):
   # create Qt application
