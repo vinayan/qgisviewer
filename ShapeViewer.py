@@ -2,6 +2,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
+import shapely
+from shapely.wkt import dumps,loads
 import sys
 import os
 # Import our GUI
@@ -25,6 +27,7 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
     QObject.connect(self.mBtnZoomOut,  SIGNAL("clicked()"),  self.zoomOut)
     QObject.connect(self.mBtnAddVector,  SIGNAL("clicked()"),  self.loadVectorLayer)
     QObject.connect(self.mBtnAddRaster,  SIGNAL("clicked()"),  self.loadRasterLayer)
+    QObject.connect(self.mBtnElevation,  SIGNAL("clicked()"),  self.getElevationTest)
 
     # Set the title for the app
     self.setWindowTitle("ShapeViewer")
@@ -35,6 +38,8 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
     self.canvas.setCanvasColor(Qt.white)
     self.canvas.enableAntiAliasing(True)
     self.canvas.show()
+    
+    self.demLayer = QgsRasterLayer()
 
     # Lay our widgets out in the main window using a 
     # vertical box layout
@@ -65,15 +70,13 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
 		return
 
     # Add layer to the registry
-	QgsMapLayerRegistry.instance().addMapLayer(layer)
-	
 	# Set extent to the extent of our layer
 	self.canvas.setExtent(layer.extent())
+	QgsMapLayerRegistry.instance().addMapLayer(layer)
+	layers = self.canvas.mapRenderer().layerSet()
+	layers.append(layer.id())
+	self.canvas.mapRenderer().setLayerSet(layers)
 
-    # Set up the map canvas layer set
-	cl = QgsMapCanvasLayer(layer)
-	layers = [cl]
-	self.canvas.setLayerSet(layers)
 	qDebug("layer loaded successfully!!" )
 	
   def loadRasterLayer(self):
@@ -89,18 +92,73 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
 	
 	if not layer.isValid():
 		return
+	
+	self.layer = layer
 
     # Add layer to the registry
-	QgsMapLayerRegistry.instance().addMapLayer(layer)
-	
 	# Set extent to the extent of our layer
 	self.canvas.setExtent(layer.extent())
-
-    # Set up the map canvas layer set
-	cl = QgsMapCanvasLayer(layer)
-	layers = [cl]
-	self.canvas.setLayerSet(layers)
+	QgsMapLayerRegistry.instance().addMapLayer(layer)
+	layers = self.canvas.mapRenderer().layerSet()
+	layers.append(layer.id())
+	self.canvas.mapRenderer().setLayerSet(layers)
 	qDebug("layer loaded successfully!!" )
+	
+  def getElevation(self, point):
+	#point is QgsPoint
+	choosenBand = 0
+	attr = 0
+	if QGis.QGIS_VERSION_INT >= 10900: # for QGIS >= 1.9
+			# this code adapted from valuetool plugin
+			ident = self.demLayer.dataProvider().identify(point, QgsRasterDataProvider.IdentifyFormatValue )
+			if ident is not None and ident.has_key(choosenBand+1):
+					attr = ident[choosenBand+1].toDouble()[0]
+					if self.demLayer.dataProvider().isNoDataValue ( choosenBand+1, attr ): 
+							attr = 0
+	else:
+			ident = self.demLayer.identify(point)
+			try:
+					attr = float(ident[1].values()[choosenBand])
+			except:
+					pass
+	return attr
+					
+  def getPointAtDistance(self,distance,geometry):
+	  shapelyLineGeom = loads(str(geometry.exportToWkt()))
+	  shapelyPoint =  shapelyLineGeom.interpolate(distance)
+	  qgsPointGeom = QgsGeometry.fromWkt(shapelyPoint.wkt)
+	  return qgsPointGeom
+	  
+  def getSegmentedPoints(self, geometry, ratio):
+	  #return list of QgsPoint
+	  pointList = []
+	  geomLength = geometry.length()
+	  perc = ratio * geomLength
+	  length = -perc
+	  while(length < geomLength):
+		  length = length + perc
+		  point = self.getPointAtDistance(length, geometry)
+		  pointList.append(point)
+	  return pointList
+	  
+  def getElevationTest(self):
+	  g1 = QgsGeometry.fromWkt('LINESTRING(490351.96514423 4548291.73076923, 494542.01322115 4541976.58653846)')
+	  spoints = self.getSegmentedPoints(g1,0.1)
+	  for item in spoints:
+		  print "print points....."
+		  print item.exportToWkt()		
+	   
+  def showBuffer(self):
+	width, ok = QtGui.QInputDialog.getDouble(iface.mapCanvas(), 'Input Dialog', 'Enter Width:')
+	qDebug("Loading Vector Layer")
+    # layout is set - open a layer
+    # Add an OGR layer to the map
+	file = QFileDialog.getOpenFileName(self, "Open Raster", ".", "Rasters (*.*)")
+	fileInfo = QFileInfo(file)
+
+
+
+	
 
 def main(argv):
   # create Qt application

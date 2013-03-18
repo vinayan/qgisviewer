@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'shapeviewer_gui.ui'
 #
-# Created: Wed Mar 13 19:20:38 2013
-#      by: PyQt4 UI code generator 4.8.3
+# Created: Sun Mar 17 13:32:39 2013
+#      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -57,6 +57,9 @@ class Ui_MainWindow(object):
         self.mBtnAddVector.setIcon(icon3)
         self.mBtnAddVector.setIconSize(QtCore.QSize(50, 50))
         self.mBtnAddVector.setObjectName(_fromUtf8("mBtnAddVector"))
+        self.mBtnElevation = QtGui.QPushButton(self.groupBox)
+        self.mBtnElevation.setGeometry(QtCore.QRect(460, 20, 91, 71))
+        self.mBtnElevation.setObjectName(_fromUtf8("mBtnElevation"))
         self.groupBox_2 = QtGui.QGroupBox(self.centralwidget)
         self.groupBox_2.setGeometry(QtCore.QRect(9, 109, 781, 441))
         self.groupBox_2.setTitle(_fromUtf8(""))
@@ -68,7 +71,7 @@ class Ui_MainWindow(object):
         self.frame.setObjectName(_fromUtf8("frame"))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 20))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
@@ -80,5 +83,6 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Gis Viewer Application", None, QtGui.QApplication.UnicodeUTF8))
+        self.mBtnElevation.setText(QtGui.QApplication.translate("MainWindow", "Elevation", None, QtGui.QApplication.UnicodeUTF8))
 
 import resources_rc
