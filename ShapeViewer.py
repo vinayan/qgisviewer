@@ -18,6 +18,7 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
 
   def __init__(self):
     QMainWindow.__init__(self)
+    self.layer = None
 
     # Required by Qt4 to initialize the UI
     self.setupUi(self)
@@ -80,6 +81,8 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
 	layers = self.canvas.mapRenderer().layerSet()
 	layers.append(layer.id())
 	self.canvas.mapRenderer().setLayerSet(layers)
+	self.layer = layer
+	self.canvas.refresh()
 
 	qDebug("layer loaded successfully!!" )
 	
@@ -107,6 +110,7 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
 	layers.append(layer.id())
 	self.canvas.mapRenderer().setLayerSet(layers)
 	qDebug("layer loaded successfully!!" )
+	self.canvas.refresh()
 	
   def getElevation(self, point):
 	#point is QgsPoint
@@ -161,7 +165,8 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
 	fileInfo = QFileInfo(file)
 
   def setSelectionTool(self):
-	  self.canvas.setMapTool(self.selectTool)	
+	  self.canvas.setMapTool(self.selectTool)
+	  self.selectTool.setCurrentLayer(self.layer)
 
 def main(argv):
   # create Qt application
