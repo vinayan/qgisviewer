@@ -29,7 +29,7 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
     QObject.connect(self.mBtnZoomOut,  SIGNAL("clicked()"),  self.zoomOut)
     QObject.connect(self.mBtnAddVector,  SIGNAL("clicked()"),  self.loadVectorLayer)
     QObject.connect(self.mBtnAddRaster,  SIGNAL("clicked()"),  self.loadRasterLayer)
-    QObject.connect(self.mBtnElevation,  SIGNAL("clicked()"),  self.setSelectionTool)
+    QObject.connect(self.mBtnSelection,  SIGNAL("clicked()"),  self.setSelectionTool)
 
     # Set the title for the app
     self.setWindowTitle("ShapeViewer")
@@ -100,7 +100,7 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
 	if not layer.isValid():
 		return
 	
-	self.layer = layer
+	#self.layer = layer
 
     # Add layer to the registry
 	# Set extent to the extent of our layer

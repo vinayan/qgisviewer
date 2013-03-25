@@ -124,7 +124,7 @@
     <widget class="QPushButton" name="mBtnElevation">
      <property name="geometry">
       <rect>
-       <x>460</x>
+       <x>570</x>
        <y>20</y>
        <width>91</width>
        <height>71</height>
@@ -132,6 +132,29 @@
      </property>
      <property name="text">
       <string>Elevation</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="mBtnSelection">
+     <property name="geometry">
+      <rect>
+       <x>450</x>
+       <y>20</y>
+       <width>91</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/images/images/select.png</normaloff>:/images/images/select.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>50</width>
+       <height>50</height>
+      </size>
      </property>
     </widget>
    </widget>
@@ -171,7 +194,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>

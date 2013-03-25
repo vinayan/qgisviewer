@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="images">
+    <file>images/select.png</file>
     <file>images/addLayer.png</file>
     <file>images/addRaster.png</file>
     <file>images/zomOut.png</file>

@@ -51,8 +51,8 @@ class SelectMapTool(QgsMapTool):
         #self.rubberBand.show()
 
     def canvasReleaseEvent(self,e):
-        if not self.dragging:
-            return
+        #if not self.dragging:
+        #    return
         x = e.pos().x()
         y = e.pos().y()
         point = self.canvas.getCoordinateTransform().toMapCoordinates(x, y)
@@ -69,7 +69,12 @@ class SelectMapTool(QgsMapTool):
         ids = []
         for feature in self.layer:
 			print feature.id()
-			ids.append(feature.id())
+			ids.append(feature.id())			        
+        if e.modifiers() & Qt.ControlModifier:
+			ids = list(set(self.layer.selectedFeaturesIds()).union(ids))
+        elif e.modifiers() & Qt.ShiftModifier:
+			ids = list(set(self.layer.selectedFeaturesIds()).difference(ids))
+        
         self.layer.setSelectedFeatures(ids)
         self.canvas.refresh()
              # do something with the feature

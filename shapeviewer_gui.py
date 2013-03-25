@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'shapeviewer_gui.ui'
 #
-# Created: Sun Mar 17 13:32:39 2013
+# Created: Mon Mar 25 22:00:05 2013
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -58,8 +58,16 @@ class Ui_MainWindow(object):
         self.mBtnAddVector.setIconSize(QtCore.QSize(50, 50))
         self.mBtnAddVector.setObjectName(_fromUtf8("mBtnAddVector"))
         self.mBtnElevation = QtGui.QPushButton(self.groupBox)
-        self.mBtnElevation.setGeometry(QtCore.QRect(460, 20, 91, 71))
+        self.mBtnElevation.setGeometry(QtCore.QRect(570, 20, 91, 71))
         self.mBtnElevation.setObjectName(_fromUtf8("mBtnElevation"))
+        self.mBtnSelection = QtGui.QPushButton(self.groupBox)
+        self.mBtnSelection.setGeometry(QtCore.QRect(450, 20, 91, 71))
+        self.mBtnSelection.setText(_fromUtf8(""))
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(_fromUtf8(":/images/images/select.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.mBtnSelection.setIcon(icon4)
+        self.mBtnSelection.setIconSize(QtCore.QSize(50, 50))
+        self.mBtnSelection.setObjectName(_fromUtf8("mBtnSelection"))
         self.groupBox_2 = QtGui.QGroupBox(self.centralwidget)
         self.groupBox_2.setGeometry(QtCore.QRect(9, 109, 781, 441))
         self.groupBox_2.setTitle(_fromUtf8(""))
@@ -71,7 +79,7 @@ class Ui_MainWindow(object):
         self.frame.setObjectName(_fromUtf8("frame"))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 20))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
