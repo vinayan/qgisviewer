@@ -30,6 +30,7 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
     QObject.connect(self.mBtnAddVector,  SIGNAL("clicked()"),  self.loadVectorLayer)
     QObject.connect(self.mBtnAddRaster,  SIGNAL("clicked()"),  self.loadRasterLayer)
     QObject.connect(self.mBtnSelection,  SIGNAL("clicked()"),  self.setSelectionTool)
+    QObject.connect(self.mBtnElevation,  SIGNAL("clicked()"),  self.getVerticesList)
 
     # Set the title for the app
     self.setWindowTitle("ShapeViewer")
@@ -167,6 +168,17 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
   def setSelectionTool(self):
 	  self.canvas.setMapTool(self.selectTool)
 	  self.selectTool.setCurrentLayer(self.layer)
+	  
+  def getVerticesList(self):
+	  verticesList = []
+	  lyrSelection = self.layer.selectedFeatures()
+	  for feature in lyrSelection:
+		  geom = feature.geometry()
+		  vrtcs = self.getSegmentedPoints(geom,0.1)
+		  for v in vrtcs:
+			  print v.asPoint().x()
+			  print v.asPoint().y()	  
+
 
 def main(argv):
   # create Qt application
