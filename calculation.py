@@ -65,22 +65,27 @@ def calcVol(i, j, p, q, area):
 	avelv=(elev[i][j]+elev[i][q]+elev[p][j]+elev[p][q])/4.0 #average elevation of 4 points
 	return (area*avelv)
 
+def calc(xCord, yCord, elev):
 
-
-for i in range(10):
-	for j in range(10):
-		area=calcArea(i,j,i+1,j+1)
-		vol=calcVol(i,j,i+1,j+1,area)
-		if j==0:
-			rvol=vol# storing the volume of road to compare with other volumes....
-		else:
-			tempvol=rvol-vol # finding the difference in volume
-			if tempvol<0:
-				cvol+=(tempvol*-1) # adding to cutt volume
-			elif tempvol>0:
-				fvol+=tempvol # adding to fill volume
+	print xCord
+	print yCord
+	print elev
+	fvol = 0
+	cvol = 0
+	for i in range(10):
+		for j in range(10):
+			area=calcArea(i,j,i+1,j+1)
+			vol=calcVol(i,j,i+1,j+1,area)
+			if j==0:
+				rvol=vol# storing the volume of road to compare with other volumes....
+			else:
+				tempvol=rvol-vol # finding the difference in volume
+				if tempvol<0:
+					cvol+=(tempvol*-1) # adding to cutt volume
+				elif tempvol>0:
+					fvol+=tempvol # adding to fill volume
 		
-print "\nThe Fill volume is: "
-print fvol
-print "\nThe cut volume is: "
-print cvol
+	print "\nThe Fill volume is: "
+	print fvol
+	print "\nThe cut volume is: "
+	print cvol

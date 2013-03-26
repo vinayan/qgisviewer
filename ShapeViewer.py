@@ -7,13 +7,17 @@ from shapely.wkt import dumps,loads
 from SelectTool import SelectMapTool
 import sys
 import os
+import matrix
+from calculation import *
 # Import our GUI
 from shapeviewer_gui import Ui_MainWindow
 
 # Environment variable QGISHOME must be set to the install directory
 # before running the application
 qgis_prefix = os.getenv("QGISHOME")
-
+xCord=matrix.zero(100,100)
+yCord=matrix.zero(100,100)
+elev=matrix.zero(100,100)
 class ShapeViewer(QMainWindow, Ui_MainWindow):
 
   def __init__(self):
@@ -45,7 +49,7 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
     # Add map tools
     self.selectTool = SelectMapTool(self.canvas)
     
-    self.demLayer = QgsRasterLayer()
+    self.demLayer = None
 
     # Lay our widgets out in the main window using a 
     # vertical box layout
@@ -101,7 +105,7 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
 	if not layer.isValid():
 		return
 	
-	#self.layer = layer
+	self.demLayer = layer
 
     # Add layer to the registry
 	# Set extent to the extent of our layer
@@ -115,21 +119,24 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
 	
   def getElevation(self, point):
 	#point is QgsPoint
+	print point.x()
+	print point.y()
 	choosenBand = 0
 	attr = 0
 	if QGis.QGIS_VERSION_INT >= 10900: # for QGIS >= 1.9
 			# this code adapted from valuetool plugin
-			ident = self.demLayer.dataProvider().identify(point, QgsRasterDataProvider.IdentifyFormatValue )
+			ident = self.demLayer.dataProvider().identify(point, QgsRasterDataProvider.IdentifyFormatValue)
 			if ident is not None and ident.has_key(choosenBand+1):
 					attr = ident[choosenBand+1].toDouble()[0]
 					if self.demLayer.dataProvider().isNoDataValue ( choosenBand+1, attr ): 
 							attr = 0
 	else:
-			ident = self.demLayer.identify(point)
-			try:
-					attr = float(ident[1].values()[choosenBand])
-			except:
-					pass
+		ident = self.demLayer.identify(point)
+		try:
+			attr = float(ident[1].values()[choosenBand])
+			
+		except:
+			pass
 	return attr
 					
   def getPointAtDistance(self,distance,geometry):
@@ -170,15 +177,31 @@ class ShapeViewer(QMainWindow, Ui_MainWindow):
 	  self.selectTool.setCurrentLayer(self.layer)
 	  
   def getVerticesList(self):
+	  i=0
 	  verticesList = []
 	  lyrSelection = self.layer.selectedFeatures()
 	  for feature in lyrSelection:
 		  geom = feature.geometry()
 		  vrtcs = self.getSegmentedPoints(geom,0.1)
 		  for v in vrtcs:
-			  print v.asPoint().x()
-			  print v.asPoint().y()	  
-
+			  print "-----------------------------------------------------------------"
+			  qDebug (str(v.asPoint().x()) + "," + str(v.asPoint().y()))	
+			  print "-----------------------------------------------------------------"
+			  x=v.asPoint().x()
+			  y=v.asPoint().y()
+			  y1=y-5
+			  for j in range(5):
+					xCord[i][j]= x
+					yCord[i][j]= y 
+					elev[i][j]=self.getElevation(QgsPoint(x,y))
+					y=y+5
+			  for j in range(5):
+					xCord[i][j]= x
+					yCord[i][j]= y1 
+					elev[i][j]=self.getElevation(QgsPoint(x,y))
+					y=y-5
+			  i = i + 1 # i++ does not exist in python..
+	  calc(xCord,yCord,elev) ##calling the calc function in the calculation.py
 
 def main(argv):
   # create Qt application
